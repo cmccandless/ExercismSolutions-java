@@ -9,11 +9,10 @@ test:
 
 test-all:
 	@ $(foreach FILE,$(shell ls -d */), \
-		$(call dotest, $(FILE)) \
+		$(call dotest,$(FILE)) \
 	)
 
 define dotest
-	cd $(1); \
-	gradle test -Dfile.encoding=utf-8 $(OPTS); \
-	cd ..;
+	# gradle test -Dfile.encoding=utf-8 -p $(1) $(OPTS) || exit 1;
+	bash --login -c "gradle test -Dfile.encoding=utf-8 -p $(1) $(OPTS) || exit 1"
 endef

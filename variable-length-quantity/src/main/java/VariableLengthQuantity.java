@@ -26,9 +26,6 @@ class VariableLengthQuantity {
         List<String> result = new ArrayList<>();
         long current = 0;
         for(long b : bytes) {
-            // if (current > 0x00ffffff) {
-            //     throw new IllegalArgumentException("Invalid variable-length quantity encoding");
-            // }
             current = (current << 7) | (b & 0x7f);
             if ((b & 0x80) == 0) {
                 result.add(String.format("0x%X", current).toLowerCase());

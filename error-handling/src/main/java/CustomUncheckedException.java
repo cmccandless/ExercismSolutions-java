@@ -1,6 +1,8 @@
 class CustomUncheckedException extends RuntimeException {
 
-    CustomUncheckedException() {
+    private static final long serialVersionUID = -4414219281389811351L;
+
+	CustomUncheckedException() {
         super();
     }
 

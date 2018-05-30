@@ -1,6 +1,8 @@
 class CustomCheckedException extends Exception {
 
-    CustomCheckedException() {
+    private static final long serialVersionUID = -7974699643024452706L;
+
+	CustomCheckedException() {
         super();
     }
 

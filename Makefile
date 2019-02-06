@@ -1,3 +1,8 @@
+BASH_CMD := bash --login -c
+GRADLE := gradle
+GRADLE_OPTS := test -Dfile.encoding=tuf-8
+GRADLE_OPTS += --no-daemon
+GRADLE_OPTS += $(OPTS)
 EXTENSION:=java
 SOURCE_FILES := $(shell find * -type f -name '*.$(EXTENSION)')
 OBJECT_FILES := $(shell echo $(SOURCE_FILES) | tr ' ' '\n' | sed -E s'/src\/(.+)\/java\/(.+)\.java/build\/classes\/\1\/\2.class/g')
@@ -14,4 +19,4 @@ GET_DEPS = $(filter $@%,$(OBJECT_FILES))
 $(EXERCISES): $$(GET_DEPS)
 
 $(OBJECT_FILES): $$(shell echo $$@ | sed -E s'/build\/classes\/(.+)\/(.+)\.class/src\/\1\/java\/\2.java/g')
-	bash --login -c "gradle test -Dfile.encoding=utf-8 -p $(shell echo $@ | cut -d'/' -f1) $(OPTS) || exit 1"
+	$(BASH_CMD) "$(GRADLE) $(GRADLE_OPTS) -p $(shell echo $@ | cut -d'/' -f1) || exit 1"

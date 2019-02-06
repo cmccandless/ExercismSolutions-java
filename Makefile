@@ -1,18 +1,17 @@
-.PHONY: lint test
+EXTENSION:=java
+SOURCE_FILES := $(shell find * -type f -name '*.$(EXTENSION)')
+OBJECT_FILES := $(shell echo $(SOURCE_FILES) | tr ' ' '\n' | sed -E s'/src\/(.+)\/java\/(.+)\.java/build\/classes\/\1\/\2.class/g')
+EXERCISES := $(shell echo $(SOURCE_FILES) | tr ' ' '\n' | cut -d'/' -f1 | uniq)
+
+.PHONY: lint test $(EXERCISES)
 lint:
 	@echo "No linter configured"
 
-test:
-	@ $(foreach FILE,$(FILES), \
-		$(call dotest,$(FILE)) \
-	)
+test-all: $(EXERCISES)
 
-test-all:
-	@ $(foreach FILE,$(shell ls -d */), \
-		$(call dotest,$(FILE)) \
-	)
+.SECONDEXPANSION:
+GET_DEPS = $(filter $@%,$(OBJECT_FILES))
+$(EXERCISES): $$(GET_DEPS)
 
-define dotest
-	# gradle test -Dfile.encoding=utf-8 -p $(1) $(OPTS) || exit 1;
-	bash --login -c "gradle test -Dfile.encoding=utf-8 -p $(1) $(OPTS) || exit 1"
-endef
+$(OBJECT_FILES): $$(shell echo $$@ | sed -E s'/build\/classes\/(.+)\/(.+)\.class/src\/\1\/java\/\2.java/g')
+	bash --login -c "gradle test -Dfile.encoding=utf-8 -p $(shell echo $@ | cut -d'/' -f1) $(OPTS) || exit 1"

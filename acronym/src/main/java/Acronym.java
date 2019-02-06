@@ -26,5 +26,4 @@ final class Acronym {
         }
         return s.toString().toUpperCase();
     }
-
 }

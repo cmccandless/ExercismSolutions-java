@@ -18,5 +18,7 @@ test-all: $(EXERCISES)
 GET_DEPS = $(filter $@%,$(OBJECT_FILES))
 $(EXERCISES): $$(GET_DEPS)
 
-$(OBJECT_FILES): $$(shell echo $$@ | sed -E s'/build\/classes\/(.+)\/(.+)\.class/src\/\1\/java\/\2.java/g')
-	$(BASH_CMD) "$(GRADLE) $(GRADLE_OPTS) -p $(shell echo $@ | cut -d'/' -f1) || exit 1"
+SED = sed -E s'/build\/classes\/(.+)\/(.+)\.class/src\/\1\/java\/\2.java/g'
+GET_SRC = $(shell echo $@ | $(SED))
+$(OBJECT_FILES): $$(GET_SRC)
+	$(GRADLE) $(GRADLE_OPTS) -p $(shell echo $@ | cut -d'/' -f1)
